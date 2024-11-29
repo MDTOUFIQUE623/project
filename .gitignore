@@ -1,0 +1,22 @@
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs
+*.log
+twitter_bot.log
+
+# Bot state
+bot_state.json
+
+# Virtual Environment
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
