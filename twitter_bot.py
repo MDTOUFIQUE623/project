@@ -330,29 +330,25 @@ class TwitterBot:
             logger.error(f"Error in community engagement: {str(e)}")
 
 def main():
-    try:
-        bot = TwitterBot()
-        logger.info("Twitter Bot initialized successfully")
-        
-        # Schedule tweets throughout the day
-        post_times = [
-            "09:00", "13:00", "17:00"  # Adjust these times as needed
-        ]
-        
-        for time_str in post_times:
-            schedule.every().day.at(time_str).do(bot.post_tweet)
-        
-        # Schedule engagement every 4 hours
-        schedule.every(4).hours.do(bot.engage_with_community)
-        
-        logger.info("Starting bot schedule...")
-        while True:
-            schedule.run_pending()
-            time.sleep(60)
-            
-    except Exception as e:
-        logger.error(f"Error in main bot execution: {str(e)}")
-        raise
+    bot = TwitterBot()
+    
+    def job():
+        try:
+            bot.post_tweet()
+            logger.info("Scheduled tweet posted successfully")
+        except Exception as e:
+            logger.error(f"Error in scheduled tweet: {str(e)}")
+
+    # Schedule tweets at specific times (all times in 24-hour format)
+    schedule.every().day.at("09:00").do(job)  # Morning tweet
+    schedule.every().day.at("13:00").do(job)  # Afternoon tweet
+    schedule.every().day.at("17:00").do(job)  # Evening tweet
+    
+    logger.info("Bot started. Waiting for scheduled times...")
+    
+    while True:
+        schedule.run_pending()
+        time.sleep(60)  # Check every minute
 
 if __name__ == "__main__":
     main()
